@@ -40,10 +40,22 @@ Seja humano, simples e profundo.
 
     const data = await response.json();
 
-    const text = data.output_text;
+    // 🔥 EXTRAÇÃO CORRETA DO TEXTO
+    let text = "";
+
+    if (data.output && data.output.length > 0) {
+      const content = data.output[0].content;
+
+      if (content && content.length > 0) {
+        const item = content.find(c => c.type === "output_text");
+        if (item) {
+          text = item.text;
+        }
+      }
+    }
 
     return res.status(200).json({
-      text: text || "Erro ao gerar devocional"
+      text: text || "Não foi possível gerar o devocional."
     });
 
   } catch (error) {
