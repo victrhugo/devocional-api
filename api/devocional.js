@@ -1,8 +1,10 @@
 export default async function handler(req, res) {
+  // 🔓 CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  // 🔁 Preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -45,14 +47,19 @@ Seja humano, simples e profundo.
 
     const data = await response.json();
 
-    res.status(200).json({
-      text: data.output[0].content[0].text
-    });
+    // 🧠 pegar resposta de forma segura
+    const text =
+      data.output_text ||
+      data.output?.[0]?.content?.[0]?.text ||
+      "Não foi possível gerar o devocional.";
+
+    return res.status(200).json({ text });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: error.message
+    console.error("ERRO:", error);
+
+    return res.status(500).json({
+      error: error.message || "Erro ao gerar devocional"
     });
   }
 }
