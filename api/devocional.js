@@ -37,6 +37,9 @@ Seja humano, simples e profundo.
     });
 
   } catch (error) {
-    res.status(500).json({ error: "Erro ao gerar devocional" });
+    console.error(error);
+    res.status(500).json({
+      error: "Erro ao gerar devocional"
+    });
   }
 }
