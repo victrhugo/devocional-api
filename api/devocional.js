@@ -1,10 +1,8 @@
 export default async function handler(req, res) {
-  // 🔥 LIBERAR CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // 🔥 lidar com preflight (IMPORTANTE)
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
@@ -36,7 +34,12 @@ Seja humano, simples e profundo.
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: prompt
+        input: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
       })
     });
 
@@ -49,7 +52,7 @@ Seja humano, simples e profundo.
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: "Erro ao gerar devocional"
+      error: error.message
     });
   }
 }
