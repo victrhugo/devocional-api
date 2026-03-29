@@ -26,43 +26,40 @@ Inclua:
 Seja humano, simples e profundo.
 `;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
-        temperature: 0.7
-      })
-    });
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/google/flan-t5-large",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer hf_SUA_CHAVE_AQUI",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          inputs: prompt
+        })
+      }
+    );
 
     const data = await response.json();
 
-    // 🔥 DEBUG (IMPORTANTE AGORA)
-    console.log("RESPOSTA OPENAI:", JSON.stringify(data, null, 2));
+    console.log("HF RESPONSE:", data);
 
-    if (data.error) {
-      return res.status(500).json({
-        error: data.error.message
-      });
+    let text = "";
+
+    if (Array.isArray(data)) {
+      text = data[0]?.generated_text;
+    } else if (data.generated_text) {
+      text = data.generated_text;
+    } else if (data.error) {
+      return res.status(500).json({ error: data.error });
     }
 
-    const text = data.choices?.[0]?.message?.content;
-
     return res.status(200).json({
-      text: text || "SEM TEXTO NA RESPOSTA"
+      text: text || "Não foi possível gerar o devocional."
     });
 
   } catch (error) {
-    console.error("ERRO GERAL:", error);
+    console.error("ERRO:", error);
 
     return res.status(500).json({
       error: error.message
