@@ -34,22 +34,29 @@ Seja humano, simples e profundo.
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
-        input: prompt
+        input: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "input_text",
+                text: prompt
+              }
+            ]
+          }
+        ]
       })
     });
 
     const data = await response.json();
 
-    // 🔥 EXTRAÇÃO UNIVERSAL (FUNCIONA SEMPRE)
     let text = "";
 
-    if (data.output_text) {
-      text = data.output_text;
-    } else if (data.output) {
+    if (data.output) {
       for (const item of data.output) {
         if (item.content) {
           for (const c of item.content) {
-            if (c.text) {
+            if (c.type === "output_text") {
               text += c.text;
             }
           }
@@ -62,7 +69,7 @@ Seja humano, simples e profundo.
     });
 
   } catch (error) {
-    console.error("ERRO COMPLETO:", error);
+    console.error("ERRO:", error);
 
     return res.status(500).json({
       error: error.message
