@@ -29,7 +29,7 @@ Seja humano, simples e profundo.
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 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 ",
+        "Authorization": "Bearer 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",
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
