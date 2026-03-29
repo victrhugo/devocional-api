@@ -30,7 +30,7 @@ Seja humano, simples e profundo.
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "Authorization": "Bearer SUA_CHAVE_AQUI",
         "Content-Type": "application/json",
         "HTTP-Referer": "http://localhost:3000",
         "X-Title": "Devocional App"
@@ -49,18 +49,15 @@ Seja humano, simples e profundo.
 
     const data = await response.json();
 
-    // DEBUG (se der ruim, olha no log da Vercel)
     console.log("OPENROUTER RESPONSE:", JSON.stringify(data, null, 2));
 
-    // ERRO DA API
     if (data.error) {
       return res.status(500).json({
         error: data.error.message
       });
     }
 
-    // TEXTO FINAL
-    const text = data?.choices?.[0]?.message?.content;
+    const text = data.choices?.[0]?.message?.content;
 
     return res.status(200).json({
       text: text || "Não foi possível gerar o devocional."
