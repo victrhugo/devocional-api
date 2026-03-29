@@ -30,7 +30,7 @@ Seja humano, simples e profundo.
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer SUA_CHAVE_AQUI",
+        "Authorization": "Bearer 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",
         "Content-Type": "application/json",
         "HTTP-Referer": "http://localhost:3000",
         "X-Title": "Devocional App"
