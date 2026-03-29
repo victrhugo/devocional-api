@@ -40,16 +40,19 @@ Seja humano, simples e profundo.
 
     const data = await response.json();
 
-    // 🔥 EXTRAÇÃO CORRETA DO TEXTO
+    // 🔥 EXTRAÇÃO UNIVERSAL (FUNCIONA SEMPRE)
     let text = "";
 
-    if (data.output && data.output.length > 0) {
-      const content = data.output[0].content;
-
-      if (content && content.length > 0) {
-        const item = content.find(c => c.type === "output_text");
-        if (item) {
-          text = item.text;
+    if (data.output_text) {
+      text = data.output_text;
+    } else if (data.output) {
+      for (const item of data.output) {
+        if (item.content) {
+          for (const c of item.content) {
+            if (c.text) {
+              text += c.text;
+            }
+          }
         }
       }
     }
@@ -59,7 +62,7 @@ Seja humano, simples e profundo.
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("ERRO COMPLETO:", error);
 
     return res.status(500).json({
       error: error.message
