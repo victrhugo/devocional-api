@@ -26,23 +26,18 @@ Inclua:
 Seja humano, simples e profundo.
 `;
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: [
+        model: "gpt-4o-mini",
+        messages: [
           {
             role: "user",
-            content: [
-              {
-                type: "input_text",
-                text: prompt
-              }
-            ]
+            content: prompt
           }
         ]
       })
@@ -50,19 +45,7 @@ Seja humano, simples e profundo.
 
     const data = await response.json();
 
-    let text = "";
-
-    if (data.output) {
-      for (const item of data.output) {
-        if (item.content) {
-          for (const c of item.content) {
-            if (c.type === "output_text") {
-              text += c.text;
-            }
-          }
-        }
-      }
-    }
+    const text = data.choices?.[0]?.message?.content;
 
     return res.status(200).json({
       text: text || "Não foi possível gerar o devocional."
