@@ -39,20 +39,30 @@ Seja humano, simples e profundo.
             role: "user",
             content: prompt
           }
-        ]
+        ],
+        temperature: 0.7
       })
     });
 
     const data = await response.json();
 
+    // 🔥 DEBUG (IMPORTANTE AGORA)
+    console.log("RESPOSTA OPENAI:", JSON.stringify(data, null, 2));
+
+    if (data.error) {
+      return res.status(500).json({
+        error: data.error.message
+      });
+    }
+
     const text = data.choices?.[0]?.message?.content;
 
     return res.status(200).json({
-      text: text || "Não foi possível gerar o devocional."
+      text: text || "SEM TEXTO NA RESPOSTA"
     });
 
   } catch (error) {
-    console.error("ERRO:", error);
+    console.error("ERRO GERAL:", error);
 
     return res.status(500).json({
       error: error.message
